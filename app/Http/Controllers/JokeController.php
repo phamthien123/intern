@@ -11,7 +11,9 @@ class JokeController extends Controller
 {
     public function getJoke()
     {
-        $jokes  =    Joke::limit(1)->get();
+        $jokes  =  Joke::select("*")->limit(1)
+        ->inRandomOrder()
+        ->get();
         $jokesD =    Jokedetail::all();
         foreach ($jokesD as $item) {
             if ($item->joke_id == 1) {
@@ -25,26 +27,28 @@ class JokeController extends Controller
                 redirect()->back()->with('alert', "That's all the jokes for today! Come back another day!");
             }
         }
-        return view('index', compact('jokes','jokesD'));
+        return view('index', compact('jokes'));
     }
 
     public  function next(Request $request)
     {
         $jokeD = new Jokedetail();
-        $user = Auth::user();
 
         $jokeD->joke_id = $request->joke;
-        $jokeD->user_id = $user->id;
-        $jokeD->name = $user->name;
-        if($request->Fun){
+
+        if ($request->Fun) {
             $jokeD->status = 'Funny';
-        }
-        else{
+        } else {
             $jokeD->status = 'Not Funny';
         }
         $jokeD->save();
 
+
         return redirect()->back();
     }
 
+    public function again(){
+        Jokedetail::truncate();
+        return redirect()->back();
+    }
 }

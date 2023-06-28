@@ -16,14 +16,12 @@ use Illuminate\Support\Facades\Route;
 */
 
 
-Route::get('/index', [JokeController::class, 'getJoke']);
+Route::get('/', [JokeController::class, 'getJoke']);
 Route::post('/next', [JokeController::class, 'next']);
+Route::get('/again', [JokeController::class, 'again']);
 
 
 
-Route::get('/', function(){
-    return view('welcome');
-});
 
 Route::get('/dashboard', function () {
     return view('dashboard');
